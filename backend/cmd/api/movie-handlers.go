@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"net/http"
-	"sing3demons/backend/cmd/api/models"
+	"sing3demons/backend/models"
 	"strconv"
 	"time"
 
@@ -16,9 +16,11 @@ func (app *application) getOneMovie(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
 		app.logger.Println(errors.New("invalid id parametter"))
+		app.errorJSON(w, err)
+		return
 	}
 
-	app.logger.Println("id id", id)
+	app.logger.Println("id ", id)
 	movie := models.Movie{
 		ID:          id,
 		Title:       "Some movie",
@@ -32,9 +34,9 @@ func (app *application) getOneMovie(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt:   time.Now(),
 	}
 
-	err = app.writeJSON(w, http.StatusOK, movie, "movie")
+	app.writeJSON(w, http.StatusOK, movie, "movie")
 }
 
 func (app *application) getAllMovies(w http.ResponseWriter, r *http.Request) {
-	
+
 }

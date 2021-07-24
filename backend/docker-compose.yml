@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres
+    container_name: api-postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=go-movies
+      - POSTGRES_PASSWORD=Passw0rd
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    restart: always
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=sing3demons@live.com
+      - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+    ports:
+      - 8081:80
+    restart: always
+volumes:
+  postgres-data:
+
