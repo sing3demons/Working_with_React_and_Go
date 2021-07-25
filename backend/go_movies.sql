@@ -24,11 +24,11 @@ SET default_table_access_method = heap;
 -- Name: genres; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.genres (
+CREATE TABLE genres (
     id integer NOT NULL,
     genre_name character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp ,
+    updated_at timestamp 
 );
 
 
@@ -36,7 +36,7 @@ CREATE TABLE public.genres (
 -- Name: genres_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.genres_id_seq
+CREATE SEQUENCE genres_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -49,14 +49,14 @@ CREATE SEQUENCE public.genres_id_seq
 -- Name: genres_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.genres_id_seq OWNED BY public.genres.id;
+ALTER SEQUENCE genres_id_seq OWNED BY public.genres.id;
 
 
 --
 -- Name: movies; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.movies (
+CREATE TABLE movies (
     id integer NOT NULL,
     title character varying,
     description text,
@@ -65,8 +65,8 @@ CREATE TABLE public.movies (
     runtime integer,
     rating integer,
     mpaa_rating character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp WITHOUT TIME ZONE,
+    updated_at timestamp 
 );
 
 
@@ -74,12 +74,12 @@ CREATE TABLE public.movies (
 -- Name: movies_genres; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.movies_genres (
+CREATE TABLE movies_genres (
     id integer NOT NULL,
     movie_id integer,
     genre_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp ,
+    updated_at timestamp 
 );
 
 
@@ -87,7 +87,7 @@ CREATE TABLE public.movies_genres (
 -- Name: movies_genres_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.movies_genres_id_seq
+CREATE SEQUENCE movies_genres_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -100,14 +100,14 @@ CREATE SEQUENCE public.movies_genres_id_seq
 -- Name: movies_genres_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.movies_genres_id_seq OWNED BY public.movies_genres.id;
+ALTER SEQUENCE movies_genres_id_seq OWNED BY public.movies_genres.id;
 
 
 --
 -- Name: movies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.movies_id_seq
+CREATE SEQUENCE movies_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -120,28 +120,28 @@ CREATE SEQUENCE public.movies_id_seq
 -- Name: movies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.movies_id_seq OWNED BY public.movies.id;
+ALTER SEQUENCE movies_id_seq OWNED BY public.movies.id;
 
 
 --
 -- Name: genres id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.genres ALTER COLUMN id SET DEFAULT nextval('public.genres_id_seq'::regclass);
+ALTER TABLE ONLY genres ALTER COLUMN id SET DEFAULT nextval('public.genres_id_seq'::regclass);
 
 
 --
 -- Name: movies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.movies ALTER COLUMN id SET DEFAULT nextval('public.movies_id_seq'::regclass);
+ALTER TABLE ONLY movies ALTER COLUMN id SET DEFAULT nextval('movies_id_seq'::regclass);
 
 
 --
 -- Name: movies_genres id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.movies_genres ALTER COLUMN id SET DEFAULT nextval('public.movies_genres_id_seq'::regclass);
+ALTER TABLE ONLY movies_genres ALTER COLUMN id SET DEFAULT nextval('movies_genres_id_seq'::regclass);
 
 
 --

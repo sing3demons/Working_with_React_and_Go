@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
   postgres:
@@ -12,14 +12,6 @@ services:
       - POSTGRES_PASSWORD=Passw0rd
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
-    restart: always
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=sing3demons@live.com
-      - PGADMIN_DEFAULT_PASSWORD=SuperSecret
-    ports:
-      - 8081:80
     restart: always
 volumes:
   postgres-data:

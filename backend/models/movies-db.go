@@ -77,9 +77,11 @@ func (m *DBModel) All() ([]*Movie, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `select id, title, description, year, release_date, rating, runtime, mpaa_rating,
-				created_at, updated_at from movies order by title
-	`
+	// query := `select id, title, description, year, release_date, rating, runtime, mpaa_rating,
+	// 			created_at, updated_at from movies order by title
+	// `
+
+	query := `select * from movies order by title`
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	if err != nil {

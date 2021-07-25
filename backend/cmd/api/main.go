@@ -42,10 +42,7 @@ func main() {
 
 	flag.IntVar(&cfg.port, "port", 8080, "Server port to listen on")
 	flag.StringVar(&cfg.env, "env", "development", "Application environment (development|production")
-	// flag.StringVar(&cfg.db.dsn, "dsn", "postgres postgres syspass pg-api 5432 sslmode=disable TimeZone=Asia/Bangkok", "Postgres connection string")
-	// PGURL := fmt.Sprintf("postgres://%s:@%s:%s/%s?sslmode=require",PGUSER,PGHOST,PGPORT,PGDATABASE)
-	// fmt.Sprintf("postgres://postgres:@postgres:5432/go_movies?sslmode=require",,,PGDATABASE)
-	flag.StringVar(&cfg.db.dsn, "dsn", "postgres:Passw0rd//postgres:@postgres:5432/go_movies?sslmode=disable", "Postgres connection string")
+	flag.StringVar(&cfg.db.dsn, "dsn", "postgres://postgres:Passw0rd@localhost/go_movies?sslmode=disable", "Postgres connection string")
 	flag.Parse()
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
@@ -54,7 +51,7 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
-	// defer db.Close()
+	defer db.Close()
 
 	app := &application{
 		config: cfg,
