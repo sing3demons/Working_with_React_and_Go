@@ -10,15 +10,12 @@ export default function Genres() {
     setIsLoading(true)
     const { data } = await axios.get('/genres')
     setGenres(data.genres)
-    // console.log(data.movies)
     setIsLoading(false)
   }
 
   useEffect(() => {
     fetchData()
   }, [])
-
-  console.log(genres)
 
   if (isLoading) return <div>Loading...</div>
 
@@ -28,7 +25,7 @@ export default function Genres() {
       <ul>
         {genres.map((m) => (
           <li key={m.id}>
-            <Link to={`/genre/${m.id}`}>{m.genre_name}</Link>
+            <Link to={`/genres/${m.id}`}>{m.genre_name}</Link>
           </li>
         ))}
       </ul>
