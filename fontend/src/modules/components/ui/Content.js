@@ -5,7 +5,7 @@ const Content = () => {
   return (
     <div className="col-md-10">
       <div className="container-xxl">
-        <Routes></Routes>
+        <Routes> </Routes>
       </div>
     </div>
   )

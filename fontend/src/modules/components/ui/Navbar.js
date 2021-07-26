@@ -17,8 +17,8 @@ export default function Navbar() {
             </Link>
           </li>
           <li className="list-group-item">
-            <Link to="/by-category" className="text-decoration-none">
-              Category
+            <Link to="/genres" className="text-decoration-none">
+              Genres
             </Link>
           </li>
           <li className="list-group-item">

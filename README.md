@@ -7,5 +7,5 @@ go run ./cmd/api/.
 
 macos
 ```
-go run ./cmd/api/*.go
+go run cmd/api/*.go
 ```
