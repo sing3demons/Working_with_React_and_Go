@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -86,16 +88,35 @@ func (app *application) getAllMoviesByGenre(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	movies,err:= app.models.DB.All(genreID)
+	movies, err := app.models.DB.All(genreID)
 	if err != nil {
 		app.errorJSON(w, err)
 		return
 	}
 
-	app.writeJSON(w,http.StatusOK,movies,"movies")
+	app.writeJSON(w, http.StatusOK, movies, "movies")
 }
 
 func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {}
-func (app *application) insertMovie(w http.ResponseWriter, r *http.Request) {}
-func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {}
+
+type createMovie struct {
+	Title        string `json:"title"`
+	Description  string `json:"description"`
+	Year         string `json:"year"`
+	Release_date string `json:"release_date"`
+	Runtime      string `json:"runtime"`
+	Rating       string `json:"rating"`
+	Mpaa_rating  string `json:"mpaa_rating"`
+}
+
+func (app *application) insertMovie(w http.ResponseWriter, r *http.Request) {
+	var movie createMovie
+	json.NewDecoder(r.Body).Decode(&movie)
+	fmt.Printf("post %v \n",movie)
+}
+func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {
+	var movie createMovie
+	json.NewDecoder(r.Body).Decode(&movie)
+	fmt.Printf("put %v \n",movie)
+}
 func (app *application) searchMovie(w http.ResponseWriter, r *http.Request) {}

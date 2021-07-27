@@ -23,13 +23,17 @@ export default function Movies() {
   return (
     <React.Fragment>
       <h2> Choose a Movie </h2>
-      <ul>
+      <div className="list-group">
         {movies.map((m) => (
-          <li key={m.id}>
-            <Link to={`${path}/${m.id}`}> {m.title} </Link>
-          </li>
+          <Link
+            key={m.id}
+            className="list-group-item list-group-item-action"
+            to={`${path}/${m.id}`}
+          >
+            {m.title}
+          </Link>
         ))}
-      </ul>
+      </div>
     </React.Fragment>
   )
 }

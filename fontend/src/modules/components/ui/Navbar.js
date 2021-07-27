@@ -22,6 +22,10 @@ export default function Navbar() {
             </Link>
           </li>
           <li className="list-group-item">
+            <Link to="/admin/movies/add" className="text-decoration-none">
+              Add movie
+            </Link>
+          </li> <li className="list-group-item">
             <Link to="/admin" className="text-decoration-none">
               Manage Catalogue
             </Link>

@@ -22,15 +22,17 @@ export default function Genres() {
   return (
     <div>
       <h2>genres </h2>
-      <ul>
+      <div className="list-group">
         {genres.map((m) => (
-          <li key={m.id}>
-            <Link to={{ pathname: `/genres/${m.id}`, genreName: m.genre_name }}>
-              {m.genre_name}
-            </Link>
-          </li>
+          <Link
+            key={m.id}
+            className="list-group-item list-group-item-action"
+            to={{ pathname: `/genres/${m.id}`, genreName: m.genre_name }}
+          >
+            {m.genre_name}
+          </Link>
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
