@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 
-export default function OneGenre() {
+export default function OneGenre({ location }) {
   const { id } = useParams()
+  const { genreName } = location
+
   const [movies, setMovies] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -17,17 +19,18 @@ export default function OneGenre() {
     fetchData()
   }, [id])
 
- 
-
   if (isLoading) return <div>Loading...</div>
   return (
     <>
-      <h2>Genre</h2>
+      <h2>Genre: {genreName}</h2>
       <div className="list-group">
         {movies?.map((m) => (
-          <div className="list-group-item list-group-item-action">
+          <Link
+            to={`/movies/${m.id}`}
+            className="list-group-item list-group-item-action"
+          >
             {m.title}
-          </div>
+          </Link>
         ))}
       </div>
     </>
