@@ -214,8 +214,23 @@ func (m *DBModel) UpdateMovie(movie Movie) (sql.Result, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	stmt := `update movies set title, description, year, release_date, runtime, rating, mpaa_rating, created_at, updated_at) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
-	result, err := m.DB.ExecContext(ctx, stmt, movie.Title, movie.Description, movie.Year, movie.ReleaseDate, movie.Runtime, movie.Rating, movie.MPAARating, movie.CreatedAt, movie.UpdatedAt)
+	stmt := `update movies set title = $1, description = $2, year = $3, release_date = $4, 
+	runtime = $5, rating = $6, mpaa_rating = $7, updated_at = $8 where id = $9`
+	result, err := m.DB.ExecContext(ctx, stmt, movie.Title, movie.Description, movie.Year, movie.ReleaseDate, movie.Runtime, movie.Rating, movie.MPAARating, movie.UpdatedAt, movie.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (m *DBModel) DeleteMovie(id int) (sql.Result, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `delete from movies where id = $1`
+
+	result, err := m.DB.ExecContext(ctx, query, id)
 	if err != nil {
 		return nil, err
 	}

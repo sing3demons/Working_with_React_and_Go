@@ -10,6 +10,7 @@ export default function Routes() {
     <Switch>
       <Route path={`${path}/movies/edit/:id`} component={EditMovie} />
       <Route path={`${path}/movies/add`} exact component={AddMovie} />
+      <Route path={`${path}/movies/delete/:id`} exact component={EditMovie} />
       <Route path={path} component={Admin} />
     </Switch>
   )

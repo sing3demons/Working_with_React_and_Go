@@ -11,17 +11,22 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+type createMovie struct {
+	ID          string `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Year        string `json:"year"`
+	ReleaseDate string `json:"release_date"`
+	Runtime     string `json:"runtime"`
+	Rating      string `json:"rating"`
+	MPAARating  string `json:"mpaa_rating"`
+}
+
 func (app *application) getOneMovie(w http.ResponseWriter, r *http.Request) {
-	params := httprouter.ParamsFromContext(r.Context())
-
-	id, err := strconv.Atoi(params.ByName("id"))
+	movie, err := app.getMovieByID(r)
 	if err != nil {
-		app.logger.Print(errors.New("invalid id parameter"))
 		app.errorJSON(w, err)
-		return
 	}
-
-	movie, err := app.models.DB.Get(id)
 
 	err = app.writeJSON(w, http.StatusOK, movie, "movie")
 	if err != nil {
@@ -46,16 +51,14 @@ func (app *application) getAllMovies(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) getGenre(w http.ResponseWriter, r *http.Request) {
-	params := httprouter.ParamsFromContext(r.Context())
-
-	id, err := strconv.Atoi(params.ByName("id"))
+	id, err := app.getByID(r)
 	if err != nil {
 		app.logger.Print(errors.New("invalid id parameter"))
 		app.errorJSON(w, err)
 		return
 	}
-	app.logger.Print(id)
-	genre, err := app.models.DB.Genre(id)
+
+	genre, err := app.models.DB.Genre(*id)
 	if err != nil {
 		app.errorJSON(w, err)
 		return
@@ -98,17 +101,48 @@ func (app *application) getAllMoviesByGenre(w http.ResponseWriter, r *http.Reque
 	app.writeJSON(w, http.StatusOK, movies, "movies")
 }
 
-func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {}
+func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
+	movie, err := app.getMovieByID(r)
+	if err != nil {
+		app.logger.Print(errors.New("invalid id parameter"))
+		return
+	}
+	_, err = app.models.DB.DeleteMovie(movie.ID)
+	if err != nil {
+		app.logger.Println(err)
+		app.errorJSON(w, err)
+		return
+	}
 
-type createMovie struct {
-	ID          string `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Year        string `json:"year"`
-	ReleaseDate string `json:"release_date"`
-	Runtime     string `json:"runtime"`
-	Rating      string `json:"rating"`
-	MPAARating  string `json:"mpaa_rating"`
+	w.WriteHeader(http.StatusNoContent)
+	app.logger.Println(http.StatusNoContent)
+
+}
+
+func (app *application) getMovieByID(r *http.Request) (*models.Movie, error) {
+
+	id, err := app.getByID(r)
+	if err != nil {
+		app.logger.Print(errors.New("invalid id parameter"))
+		return nil, err
+	}
+
+	movie, err := app.models.DB.Get(*id)
+	if err != nil {
+		return nil, err
+	}
+	return movie, nil
+}
+
+func (app *application) getByID(r *http.Request) (*int, error) {
+	params := httprouter.ParamsFromContext(r.Context())
+
+	id, err := strconv.Atoi(params.ByName("id"))
+	if err != nil {
+		app.logger.Print(errors.New("invalid id parameter"))
+		return nil, err
+	}
+	return &id, nil
 }
 
 func (app *application) insertMovie(w http.ResponseWriter, r *http.Request) {
@@ -118,9 +152,6 @@ func (app *application) insertMovie(w http.ResponseWriter, r *http.Request) {
 
 	var movie models.Movie
 
-	app.logger.Println(form)
-
-	// movie.ID, _ = strconv.Atoi(form.ID)
 	movie.Title = form.Title
 	movie.Description = form.Description
 	movie.Year, _ = strconv.Atoi(form.Year)
@@ -152,8 +183,16 @@ func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(params.ByName("id"))
 	newDate, _ := time.Parse("2006-01-02", form.ReleaseDate)
 
+	m, err := app.models.DB.Get(id)
+	if err != nil {
+		app.logger.Println(err)
+		app.errorJSON(w, err)
+		return
+	}
+
 	var movie models.Movie
-	movie.ID = id
+	movie.ID = m.ID
+	movie.Title = form.Title
 	movie.Description = form.Description
 	movie.Year, _ = strconv.Atoi(form.Year)
 	movie.ReleaseDate = newDate
@@ -162,7 +201,7 @@ func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {
 	movie.MPAARating = form.MPAARating
 	movie.UpdatedAt = time.Now()
 
-	_, err := app.models.DB.UpdateMovie(movie)
+	_, err = app.models.DB.UpdateMovie(movie)
 	if err != nil {
 		app.logger.Println(err)
 		app.errorJSON(w, err)

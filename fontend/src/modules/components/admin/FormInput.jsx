@@ -1,18 +1,7 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { Link, useHistory } from 'react-router-dom'
 import axios from 'axios'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-
-const schema = yup.object().shape({
-  title: yup.string().required(),
-  description: yup.string().required(),
-  year: yup.number().positive().integer().required(),
-  runtime: yup.number().positive().integer().required(),
-  rating: yup.number().positive().integer().required(),
-  mpaa_rating: yup.string().required(),
-  release_date: yup.date().required(),
-})
 
 export default function FormInput({
   movie,
@@ -20,6 +9,7 @@ export default function FormInput({
   onClick,
   isCheckRequire,
 }) {
+  const history = useHistory()
   const {
     register,
     handleSubmit,
@@ -47,10 +37,10 @@ export default function FormInput({
       return await axios.put(`/admin/edit-movie/${movie.id}`, {
         title: title,
         description: description,
-        year: +year,
+        year: year,
         release_date: release_date.split('T')[0],
-        runtime: +runtime,
-        rating: +rating,
+        runtime: runtime,
+        rating: rating,
         mpaa_rating: mpaa_rating.toString(),
       })
     }
@@ -65,9 +55,26 @@ export default function FormInput({
       mpaa_rating,
     })
   }
+
+  const deletMovie = async (id) => {
+    await axios.delete(`/admin/delete-movie/${id}`)
+    history.replace('/movies')
+  }
+
   return (
     <>
-      <h2>Add/Edit Movie</h2>
+      <h2>
+        Add/Edit Movie
+        {movie?.id && (
+          <Link
+            class="btn btn-danger btn-sm mx-3"
+            onClick={() => deletMovie(movie?.id)}
+            role="button"
+          >
+            Delete: {movie?.id}
+          </Link>
+        )}
+      </h2>
       <hr />
       <form method="post" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
