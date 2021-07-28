@@ -27,6 +27,7 @@ export default function EditMovie() {
         movie={movie}
         releaseDate={releaseDate.split('T')[0]}
         onClick="Edit"
+        isCheckRequire={false}
       />
     </>
   )

@@ -4,7 +4,7 @@ import FormInput from './FormInput'
 export default function AddMovie() {
   return (
     <>
-      <FormInput  />
+      <FormInput isCheckRequire />
     </>
   )
 }

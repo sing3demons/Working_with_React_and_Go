@@ -196,3 +196,29 @@ func (m *DBModel) Genre(id int) (*Genre, error) {
 
 	return &genre, nil
 }
+
+func (m *DBModel) InsertMovie(movie Movie) (sql.Result, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `insert into movies (title, description, year, release_date, runtime, rating, mpaa_rating, created_at, updated_at) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+	result, err := m.DB.ExecContext(ctx, stmt, movie.Title, movie.Description, movie.Year, movie.ReleaseDate, movie.Runtime, movie.Rating, movie.MPAARating, movie.CreatedAt, movie.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (m *DBModel) UpdateMovie(movie Movie) (sql.Result, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `update movies set title, description, year, release_date, runtime, rating, mpaa_rating, created_at, updated_at) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+	result, err := m.DB.ExecContext(ctx, stmt, movie.Title, movie.Description, movie.Year, movie.ReleaseDate, movie.Runtime, movie.Rating, movie.MPAARating, movie.CreatedAt, movie.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}

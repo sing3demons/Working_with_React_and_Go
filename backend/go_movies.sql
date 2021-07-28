@@ -66,7 +66,7 @@ CREATE TABLE movies (
     rating integer,
     mpaa_rating character varying,
     created_at timestamp WITHOUT TIME ZONE,
-    updated_at timestamp 
+    updated_at timestamp WITHOUT TIME ZONE
 );
 
 
