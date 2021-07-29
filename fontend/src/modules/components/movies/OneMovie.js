@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
+import LoadingPage from '../ui/LoadingPage.jsx'
 
 export default function OneMovie() {
   const { id } = useParams()
@@ -20,7 +21,7 @@ export default function OneMovie() {
     fetchData()
   }, [id])
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <LoadingPage />
 
   return (
     <>

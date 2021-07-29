@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link, useRouteMatch } from 'react-router-dom'
+import LoadingPage from '../ui/LoadingPage.jsx'
 
 export default function Movies() {
   const [movies, setMovies] = useState([])
@@ -18,7 +19,7 @@ export default function Movies() {
     fetchData()
   }, [])
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <LoadingPage />
 
   return (
     <React.Fragment>

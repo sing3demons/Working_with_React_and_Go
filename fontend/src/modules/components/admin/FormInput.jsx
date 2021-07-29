@@ -1,6 +1,6 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 
 export default function FormInput({
@@ -10,6 +10,7 @@ export default function FormInput({
   isCheckRequire,
 }) {
   const history = useHistory()
+
   const {
     register,
     handleSubmit,
@@ -66,56 +67,56 @@ export default function FormInput({
       <h2>
         Add/Edit Movie
         {movie?.id && (
-          <Link
-            class="btn btn-danger btn-sm mx-3"
+          <div
+            className="btn btn-danger btn-sm mx-3"
             onClick={() => deletMovie(movie?.id)}
             role="button"
           >
             Delete: {movie?.id}
-          </Link>
+          </div>
         )}
       </h2>
       <hr />
       <form method="post" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           {errors.title && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               {errors.title?.message}title is a required field
             </div>
           )}
 
           {errors.description && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               {errors.description?.message}description is a required field
             </div>
           )}
 
           {errors.year && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               year must be a `number` type, but the final value was: `NaN` (cast
               from the value `""`).
             </div>
           )}
           {errors.release_date && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               release_date must be a `date` type, but the final value was:
               `Invalid Date` (cast from the value `""`).
             </div>
           )}
           {errors.runtime && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               runtime must be a `number` type, but the final value was: `NaN`
               (cast from the value `""`).
             </div>
           )}
           {errors.rating && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               rating must be a `number` type, but the final value was: `NaN`
               (cast from the value `""`).
             </div>
           )}
           {errors.mpaa_rating === 'Choose..' && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               {errors.mpaa_rating?.message}
             </div>
           )}
@@ -138,12 +139,10 @@ export default function FormInput({
             className={`form-control ${errors?.description && 'is-invalid'}`}
             id="description"
             name="description"
-            defaultValue={movie?.description}
             {...register('description', { required: isCheckRequire })}
             row="3"
-          >
-            {movie?.description}
-          </textarea>
+            defaultValue={movie?.description}
+          />
         </div>
 
         <div className="mb-3">
@@ -202,7 +201,6 @@ export default function FormInput({
             id="mpaa_rating"
             name="mpaa_rating"
             {...register('mpaa_rating', { required: isCheckRequire })}
-            // defaultValue={movie?.mpaa_rating}
           >
             <option className="form-select">
               {movie?.mpaa_rating ?? 'Choose..'}

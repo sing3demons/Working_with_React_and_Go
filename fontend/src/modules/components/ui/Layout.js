@@ -1,7 +1,7 @@
 import React from 'react'
 import Content from './Content'
 import Header from './Header'
-import Navbar from './Navbar'
+import Navbar from './Navbar.jsx'
 
 export default function Layout() {
   return (

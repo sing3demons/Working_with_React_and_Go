@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import LoadingPage from '../ui/LoadingPage.jsx'
 
 export default function Genres() {
   const [genres, setGenres] = useState([])
@@ -17,7 +18,7 @@ export default function Genres() {
     fetchData()
   }, [])
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <LoadingPage />
 
   return (
     <div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
+import LoadingPage from '../ui/LoadingPage.jsx'
 
 export default function OneGenre({ location }) {
   const { id } = useParams()
@@ -19,7 +20,8 @@ export default function OneGenre({ location }) {
     fetchData()
   }, [id])
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <LoadingPage />
+  
   return (
     <>
       <h2>Genre: {genreName}</h2>
