@@ -65,7 +65,7 @@ export default function Login() {
         </div>
         <div className="mb-3">
           <label className="form-label">Password</label>
-          <div className="input-group ">
+          <div className="input-group">
             <input
               type={checkType}
               className={`form-control ${errors?.password && 'is-invalid'}`}

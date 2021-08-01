@@ -16,16 +16,19 @@ export default function FormInput({
     handleSubmit,
     formState: { errors },
   } = useForm()
+  let token = localStorage.getItem('token')
 
-  const onSubmit = async ({
-    title,
-    description,
-    year,
-    release_date,
-    runtime,
-    rating,
-    mpaa_rating,
-  }) => {
+  const onSubmit = async (data) => {
+    let {
+      title,
+      description,
+      year,
+      release_date,
+      runtime,
+      rating,
+      mpaa_rating,
+    } = data
+    
     if (onClick === 'Edit') {
       if (title === '') title = movie.title
       if (description === '') description = movie.description
@@ -35,26 +38,35 @@ export default function FormInput({
       if (rating === '') rating = movie.rating
       if (mpaa_rating === 'Choose..') mpaa_rating = movie.mpaa_rating
 
-      return await axios.put(`/admin/edit-movie/${movie.id}`, {
-        title: title,
-        description: description,
-        year: year,
-        release_date: release_date.split('T')[0],
-        runtime: runtime,
-        rating: rating,
-        mpaa_rating: mpaa_rating.toString(),
-      })
+      return await axios.put(
+        `/admin/edit-movie/${movie.id}`,
+        {
+          title: title,
+          description: description,
+          year: year,
+          release_date: release_date.split('T')[0],
+          runtime: runtime,
+          rating: rating,
+          mpaa_rating: mpaa_rating.toString(),
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
     }
     if (mpaa_rating === 'Choose..') return
-    await axios.post('/admin/add-movie', {
-      title,
-      description,
-      release_date: release_date.split('T')[0],
-      year,
-      runtime,
-      rating,
-      mpaa_rating,
-    })
+    await axios.post(
+      '/admin/add-movie',
+      {
+        title,
+        description,
+        release_date: release_date.split('T')[0],
+        year,
+        runtime,
+        rating,
+        mpaa_rating,
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    history.replace('/movies')
   }
 
   const deletMovie = async (id) => {

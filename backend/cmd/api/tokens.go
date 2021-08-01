@@ -33,7 +33,7 @@ func (app *application) Signin(w http.ResponseWriter, r *http.Request) {
 
 	hashedPassword := validUser.Password
 	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(creds.Password)); err != nil {
-		app.errorJSON(w, errors.New("unauthorized 2"))
+		app.errorJSON(w, errors.New("unauthorized"))
 		return
 	}
 
@@ -42,8 +42,8 @@ func (app *application) Signin(w http.ResponseWriter, r *http.Request) {
 	claims.Issued = jwt.NewNumericTime(time.Now())
 	claims.NotBefore = jwt.NewNumericTime(time.Now())
 	claims.Expires = jwt.NewNumericTime(time.Now().Add(24 * time.Hour))
-	claims.Issuer = "singDev"
-	claims.Audiences = []string{"singDev.com"}
+	claims.Issuer = "sing@dev.com"
+	claims.Audiences = []string{"sing@dev.com"}
 
 	jwtBytes, err := claims.HMACSign(jwt.HS256, []byte(app.config.jwt.secret))
 	if err != nil {
