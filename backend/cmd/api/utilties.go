@@ -33,3 +33,9 @@ func (app *application) errorJSON(w http.ResponseWriter, err error) {
 
 	app.writeJSON(w, http.StatusBadRequest, theError, "error")
 }
+
+func (app *application) Bind(r *http.Request) func(interface{}) error {
+	return func(v interface{}) error {
+		return json.NewDecoder(r.Body).Decode(v)
+	}
+}

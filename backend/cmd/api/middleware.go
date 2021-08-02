@@ -27,7 +27,7 @@ func (app *application) checkToken(next http.Handler) http.Handler {
 		authHeader := r.Header.Get("Authorization")
 
 		if authHeader == "" {
-			//
+			app.logger.Panicln("Authorization is null")
 		}
 
 		headerParts := strings.Split(authHeader, " ")
@@ -43,6 +43,7 @@ func (app *application) checkToken(next http.Handler) http.Handler {
 		token := headerParts[1]
 
 		claims, err := jwt.HMACCheck([]byte(token), []byte(app.config.jwt.secret))
+
 		if err != nil {
 			app.errorJSON(w, errors.New("unauthorized - no bearer"))
 			return
@@ -68,6 +69,8 @@ func (app *application) checkToken(next http.Handler) http.Handler {
 			app.errorJSON(w, errors.New("unauthorized"))
 			return
 		}
+
+		r.Header.Add("sub", strconv.Itoa(int(userID)))
 
 		log.Println("Valid user: ", userID)
 

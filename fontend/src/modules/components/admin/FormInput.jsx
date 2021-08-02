@@ -18,17 +18,15 @@ export default function FormInput({
   } = useForm()
   let token = localStorage.getItem('token')
 
-  const onSubmit = async (data) => {
-    let {
-      title,
-      description,
-      year,
-      release_date,
-      runtime,
-      rating,
-      mpaa_rating,
-    } = data
-    
+  const onSubmit = async ({
+    title,
+    description,
+    year,
+    release_date,
+    runtime,
+    rating,
+    mpaa_rating,
+  }) => {
     if (onClick === 'Edit') {
       if (title === '') title = movie.title
       if (description === '') description = movie.description
@@ -38,7 +36,7 @@ export default function FormInput({
       if (rating === '') rating = movie.rating
       if (mpaa_rating === 'Choose..') mpaa_rating = movie.mpaa_rating
 
-      return await axios.put(
+      await axios.put(
         `/admin/edit-movie/${movie.id}`,
         {
           title: title,
@@ -51,8 +49,12 @@ export default function FormInput({
         },
         { headers: { Authorization: `Bearer ${token}` } }
       )
+      history.replace('/movies')
+      return
     }
+
     if (mpaa_rating === 'Choose..') return
+
     await axios.post(
       '/admin/add-movie',
       {
@@ -74,17 +76,19 @@ export default function FormInput({
     history.replace('/movies')
   }
 
+  const alertClass = 'alert alert-danger'
+
   return (
     <>
       <h2>
         Add/Edit Movie
-        {movie?.id && (
+        {movie?.title && (
           <div
             className="btn btn-danger btn-sm mx-3"
             onClick={() => deletMovie(movie?.id)}
             role="button"
           >
-            Delete: {movie?.id}
+            Delete {movie?.title}
           </div>
         )}
       </h2>
@@ -92,43 +96,43 @@ export default function FormInput({
       <form method="post" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           {errors.title && (
-            <div className="alert alert-danger" role="alert">
+            <div className={alertClass} role="alert">
               {errors.title?.message}title is a required field
             </div>
           )}
 
           {errors.description && (
-            <div className="alert alert-danger" role="alert">
+            <div className={alertClass} role="alert">
               {errors.description?.message}description is a required field
             </div>
           )}
 
           {errors.year && (
-            <div className="alert alert-danger" role="alert">
+            <div className={alertClass} role="alert">
               year must be a `number` type, but the final value was: `NaN` (cast
               from the value `""`).
             </div>
           )}
           {errors.release_date && (
-            <div className="alert alert-danger" role="alert">
+            <div className={alertClass} role="alert">
               release_date must be a `date` type, but the final value was:
               `Invalid Date` (cast from the value `""`).
             </div>
           )}
           {errors.runtime && (
-            <div className="alert alert-danger" role="alert">
+            <div className={alertClass} role="alert">
               runtime must be a `number` type, but the final value was: `NaN`
               (cast from the value `""`).
             </div>
           )}
           {errors.rating && (
-            <div className="alert alert-danger" role="alert">
+            <div className={alertClass} role="alert">
               rating must be a `number` type, but the final value was: `NaN`
               (cast from the value `""`).
             </div>
           )}
           {errors.mpaa_rating === 'Choose..' && (
-            <div className="alert alert-danger" role="alert">
+            <div className={alertClass} role="alert">
               {errors.mpaa_rating?.message}
             </div>
           )}

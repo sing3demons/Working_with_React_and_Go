@@ -9,9 +9,9 @@ import Login from './Login.jsx'
 export default function Routes() {
   return (
     <Switch>
-      <Route path="/admin" component={AdminRoutes} />{' '}
-      <Route path="/movies" component={MoviesRoutes} />{' '}
-      <Route path="/genres" component={GenresRoutes} />{' '}
+      <Route path="/admin" component={AdminRoutes} />
+      <Route path="/movies" component={MoviesRoutes} />
+      <Route path="/genres" component={GenresRoutes} />
       <Route path="/login" component={Login} />
       <Route path="/" component={Home} exact />
     </Switch>

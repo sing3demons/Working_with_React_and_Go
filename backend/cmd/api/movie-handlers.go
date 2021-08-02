@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 	"sing3demons/backend/models"
@@ -12,7 +11,6 @@ import (
 )
 
 type createMovie struct {
-	ID          string `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Year        string `json:"year"`
@@ -102,25 +100,37 @@ func (app *application) getAllMoviesByGenre(w http.ResponseWriter, r *http.Reque
 }
 
 func (app *application) deleteMovie(w http.ResponseWriter, r *http.Request) {
-	movie, err := app.getMovieByID(r)
-	if err != nil {
-		app.logger.Print(errors.New("invalid id parameter"))
-		return
-	}
-	_, err = app.models.DB.DeleteMovie(movie.ID)
-	if err != nil {
-		app.logger.Println(err)
-		app.errorJSON(w, err)
-		return
-	}
+
+	params := httprouter.ParamsFromContext(r.Context())
+
+	id := params.ByName("id")
+
+	app.logger.Println(id)
+
+	// if err != nil {
+	// 	app.errorJSON(w, err)
+	// 	return
+	// }
+
+	// movie, err := app.models.DB.Get(id)
+	// if err != nil {
+	// 	app.logger.Print(errors.New("invalid id parameter"))
+	// 	return
+	// }
+
+	// app.logger.Println(movie)
+
+	// _, err = app.models.DB.DeleteMovie(movie.ID)
+	// if err != nil {
+	// 	app.logger.Println(err)
+	// 	app.errorJSON(w, err)
+	// 	return
+	// }
 
 	w.WriteHeader(http.StatusNoContent)
-	app.logger.Println(http.StatusNoContent)
-
 }
 
 func (app *application) getMovieByID(r *http.Request) (*models.Movie, error) {
-
 	id, err := app.getByID(r)
 	if err != nil {
 		app.logger.Print(errors.New("invalid id parameter"))
@@ -139,7 +149,6 @@ func (app *application) getByID(r *http.Request) (*int, error) {
 
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
-		app.logger.Print(errors.New("invalid id parameter"))
 		return nil, err
 	}
 	return &id, nil
@@ -147,7 +156,8 @@ func (app *application) getByID(r *http.Request) (*int, error) {
 
 func (app *application) insertMovie(w http.ResponseWriter, r *http.Request) {
 	var form createMovie
-	json.NewDecoder(r.Body).Decode(&form)
+	// json.NewDecoder(r.Body).Decode(&form)
+	app.Bind(r)(&form)
 	newDate, _ := time.Parse("2006-01-02", form.ReleaseDate)
 
 	var movie models.Movie
@@ -174,18 +184,27 @@ func (app *application) insertMovie(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF8")
 	w.WriteHeader(http.StatusCreated)
 }
+
 func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {
 	var form createMovie
-	json.NewDecoder(r.Body).Decode(&form)
+	// json.NewDecoder(r.Body).Decode(&form)
+	if err := app.Bind(r)(&form); err != nil {
+		app.logger.Printf("error: %v", err)
+		return
+	}
+
+	newDate, _ := time.Parse("2006-01-02", form.ReleaseDate)
 
 	params := httprouter.ParamsFromContext(r.Context())
-
-	id, _ := strconv.Atoi(params.ByName("id"))
-	newDate, _ := time.Parse("2006-01-02", form.ReleaseDate)
+	id, err := strconv.Atoi(params.ByName("id"))
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
 
 	m, err := app.models.DB.Get(id)
 	if err != nil {
-		app.logger.Println(err)
+		app.logger.Printf("error: %v\n", err)
 		app.errorJSON(w, err)
 		return
 	}
@@ -201,7 +220,7 @@ func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {
 	movie.MPAARating = form.MPAARating
 	movie.UpdatedAt = time.Now()
 
-	_, err = app.models.DB.UpdateMovie(movie)
+	result, err := app.models.DB.UpdateMovie(movie)
 	if err != nil {
 		app.logger.Println(err)
 		app.errorJSON(w, err)
@@ -210,6 +229,7 @@ func (app *application) updateMovie(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF8")
 	w.WriteHeader(http.StatusOK)
-	app.logger.Println(http.StatusOK)
+	app.logger.Printf("%v", result)
 }
-func (app *application) searchMovie(w http.ResponseWriter, r *http.Request) {}
+
+// func (app *application) searchMovie(w http.ResponseWriter, r *http.Request) {}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -26,7 +25,11 @@ type Credentials struct {
 func (app *application) Signin(w http.ResponseWriter, r *http.Request) {
 	var creds Credentials
 
-	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
+	// if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
+	// 	app.errorJSON(w, errors.New("unauthorized"))
+	// 	return
+	// }
+	if err := app.Bind(r)(&creds); err != nil {
 		app.errorJSON(w, errors.New("unauthorized"))
 		return
 	}

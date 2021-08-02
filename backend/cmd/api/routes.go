@@ -9,8 +9,10 @@ import (
 )
 
 func (app *application) wrap(next http.Handler) httprouter.Handle {
-	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		ctx := context.WithValue(r.Context(), "params", p)
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+		//pass httprouter.Params to request context
+		ctx := context.WithValue(r.Context(), "params", ps)
+		//call next middleware with new context
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
 }
@@ -30,9 +32,9 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/v1/genre/:id", app.getGenre)
 	router.HandlerFunc(http.MethodGet, "/v1/genres", app.getGenres)
 
-	router.POST("/v1/admin/add-movie", app.wrap(secure.ThenFunc(app.insertMovie)))
-	router.POST("/v1/admin/edit-movie/:id", app.wrap(secure.ThenFunc(app.insertMovie)))
 	router.DELETE("/v1/admin/delete-movie/:id", app.wrap(secure.ThenFunc(app.deleteMovie)))
+	router.POST("/v1/admin/add-movie", app.wrap(secure.ThenFunc(app.insertMovie)))
+	router.PUT("/v1/admin/edit-movie/:id", app.wrap(secure.ThenFunc(app.updateMovie)))
 
 	// router.HandlerFunc(http.MethodPost, "/v1/admin/add-movie", app.insertMovie)
 	// router.HandlerFunc(http.MethodPut, "/v1/admin/edit-movie/:id", app.updateMovie)
